@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()" fill="clear">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ translate('configuration') }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ translate('configuration') }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="config-content">
+    <h2>{{ translate('appSettings') }}</h2>
+    
+    <ion-list>
+      <ion-item>
+        <ion-label>{{ translate('appVersion') }}</ion-label>
+        <ion-note slot="end">1.0.0</ion-note>
+      </ion-item>
+      
+      <ion-item button (click)="changeLanguage()">
+        <ion-label>{{ translate('language') }}</ion-label>
+        <ion-note slot="end">{{ selectedLanguage }}</ion-note>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Botón flotante de información en esquina inferior izquierda -->
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button (click)="testErrorPage()" size="small" color="medium">
+      <ion-icon name="information-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

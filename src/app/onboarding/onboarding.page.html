@@ -1,0 +1,47 @@
+<ion-content>
+  <div class="onboarding-container">
+    <ion-button 
+      fill="clear" 
+      class="skip-button" 
+      (click)="skip()"
+      *ngIf="!isLastSlide()"
+    >
+      {{ translation.translate('skip') }}
+    </ion-button>
+
+    <swiper-container 
+      #swiper
+      [pagination]="true"
+      (slidechange)="onSlideChange()"
+      (swiperslidechange)="onSlideChange()"
+    >
+      <swiper-slide *ngFor="let slide of slides">
+        <div class="slide-content">
+          <ion-icon 
+            [name]="slide.icon" 
+            [style.color]="slide.color"
+            class="slide-icon"
+          ></ion-icon>
+          <h1>{{ translation.translate(slide.title) }}</h1>
+          <p>{{ translation.translate(slide.description) }}</p>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+
+    <div class="button-container">
+      <ion-button 
+        expand="block" 
+        (click)="next()"
+      >
+        {{ translation.translate('next') }}
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Botón flotante de cambio de idioma -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="toggleLanguage()">
+      <ion-icon name="language-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

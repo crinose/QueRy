@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ translation.translate('login') }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ translation.translate('login') }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">{{ translation.translate('username') }}</ion-label>
+          <ion-input 
+            type="text" 
+            [(ngModel)]="username"
+            [disabled]="isLoading"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">{{ translation.translate('password') }}</ion-label>
+          <ion-input 
+            type="password" 
+            [(ngModel)]="password"
+            [disabled]="isLoading"
+          ></ion-input>
+        </ion-item>
+
+        <ion-button 
+          expand="block" 
+          (click)="login()" 
+          class="ion-margin-top"
+          [disabled]="isLoading"
+        >
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">{{ translation.translate('loginButton') }}</span>
+        </ion-button>
+
+        <div class="forgot-password ion-text-center ion-margin-top">
+          <ion-button fill="clear" size="small" (click)="resetPassword()">
+            {{ translation.translate('forgotPassword') }}
+          </ion-button>
+        </div>
+
+        <div class="register-link ion-text-center">
+          <ion-text color="medium">
+            {{ translation.translate('noAccount') }}
+          </ion-text>
+          <ion-button fill="clear" (click)="goToRegister()">
+            {{ translation.translate('register') }}
+          </ion-button>
+        </div>
+
+        <!-- Usuario demo info -->
+        <div class="demo-info ion-margin-top">
+          <ion-text color="medium">
+            <p><small>Demo: username: <strong>demo</strong> | password: <strong>demo123</strong></small></p>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Botón flotante de cambio de idioma -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="toggleLanguage()">
+      <ion-icon name="language-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

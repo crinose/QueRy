@@ -1,0 +1,58 @@
+<ion-content [fullscreen]="true">
+  <div class="not-found-container">
+    <div class="content">
+      <!-- Robot SVG -->
+      <div class="robot-container">
+        <svg class="robot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Antena -->
+          <line x1="100" y1="30" x2="100" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="100" cy="25" r="5" fill="currentColor"/>
+          
+          <!-- Cabeza -->
+          <rect x="70" y="50" width="60" height="50" rx="10" fill="currentColor" opacity="0.9"/>
+          
+          <!-- Ojos -->
+          <circle cx="85" cy="70" r="8" fill="white"/>
+          <circle cx="115" cy="70" r="8" fill="white"/>
+          <circle cx="87" cy="72" r="4" fill="#333"/>
+          <circle cx="117" cy="72" r="4" fill="#333"/>
+          
+          <!-- Boca triste -->
+          <path d="M 85 88 Q 100 83 115 88" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+          
+          <!-- Cuerpo -->
+          <rect x="60" y="105" width="80" height="70" rx="15" fill="currentColor" opacity="0.9"/>
+          
+          <!-- Panel del pecho -->
+          <rect x="80" y="120" width="40" height="35" rx="5" fill="white" opacity="0.3"/>
+          <circle cx="100" cy="137" r="8" fill="white" opacity="0.5"/>
+          
+          <!-- Brazos -->
+          <rect x="35" y="115" width="20" height="50" rx="10" fill="currentColor" opacity="0.8"/>
+          <rect x="145" y="115" width="20" height="50" rx="10" fill="currentColor" opacity="0.8"/>
+          
+          <!-- Manos -->
+          <circle cx="45" cy="170" r="10" fill="currentColor" opacity="0.8"/>
+          <circle cx="155" cy="170" r="10" fill="currentColor" opacity="0.8"/>
+          
+          <!-- Piernas -->
+          <rect x="75" y="175" width="18" height="15" rx="8" fill="currentColor" opacity="0.8"/>
+          <rect x="107" y="175" width="18" height="15" rx="8" fill="currentColor" opacity="0.8"/>
+        </svg>
+      </div>
+
+      <!-- Error Code -->
+      <h1 class="error-code">404</h1>
+      
+      <!-- Mensajes traducidos -->
+      <h2 class="error-title">{{ translation.translate('pageNotFoundTitle') }}</h2>
+      <p class="error-description">{{ translation.translate('pageNotFoundMessage') }}</p>
+      
+      <!-- Botón para volver -->
+      <ion-button (click)="goHome()" expand="block" size="large" class="home-button">
+        <ion-icon slot="start" name="home-outline"></ion-icon>
+        {{ translation.translate('goToHome') }}
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

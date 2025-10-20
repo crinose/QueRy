@@ -1,0 +1,660 @@
+#container {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+#container a {
+  text-decoration: none;
+}
+
+// arreglo de zonas superiores e inferiores en moviles
+ion-app {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab-content-container {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: auto !important;
+  z-index: 1;
+}
+
+.tab-content {
+  padding: 20px;
+  height: 100%;
+  text-align: center;
+}
+
+.slide-content {
+  display: none; // Ocultar completamente tabs inactivos
+  padding: 20px;
+  height: 100%;
+}
+
+.slide-content.active {
+  display: block; // Mostrar solo tab activo
+  pointer-events: auto !important;
+  z-index: 100 !important;
+  position: relative !important;
+}
+
+// Animationes Slide
+.slide-content.slide-in-right {
+  animation-name: slideInRight;
+}
+
+.slide-content.slide-in-left {
+  animation-name: slideInLeft;
+}
+
+.slide-content.slide-out-left {
+  animation-name: slideOutLeft;
+}
+
+.slide-content.slide-out-right {
+  animation-name: slideOutRight;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.tab-content h2 {
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.tab-content p {
+  color: #666666;
+}
+
+.welcome-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.welcome-container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.welcome-container h1 {
+  color: #333333;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.welcome-container > p {
+  font-size: 1.3rem;
+  margin-bottom: 50px;
+  color: #666666;
+}
+
+.instruction {
+  margin-top: 40px;
+  animation: bounce 2s infinite;
+}
+
+.arrow-icon {
+  font-size: 32px;
+  color: var(--ion-color-primary);
+  margin-bottom: 15px;
+}
+
+.instruction p {
+  color: var(--ion-color-primary);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.tab-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 6px;
+  display: block;
+  flex-shrink: 0;
+}
+
+ion-label {
+  font-size: 12px;
+  margin-top: 0px;
+  line-height: 1.2;
+  text-align: center;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #e0e0e0;
+    --color: #000000;
+    --padding-top: 24px;
+    --min-height: 80px;
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  ion-buttons {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  
+  ion-button {
+    margin: 0;
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}
+
+.colormode-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.settings-icon {
+  width: 24px;
+  height: 24px;
+}
+
+// Dark mode styles
+:host-context(body.dark-mode) {
+  ion-header {
+    ion-toolbar {
+      --background: #2d2d2d;
+      --color: #ffffff;
+    }
+  }
+  
+  ion-content {
+    --background: #1a1a1a;
+    --color: #ffffff;
+  }
+  
+  ion-tab-bar {
+    --background: #2d2d2d;
+    border-top: 1px solid #ffffff;
+  }
+  
+  ion-tab-button {
+    --color: #ffffff;
+  }
+  
+  ion-tab-button::after {
+    background-color: #ffffff;
+  }
+  
+  ion-tab-button.selected {
+    --color: var(--ion-color-primary);
+  }
+  
+  .tab-content h2 {
+    color: #ffffff;
+  }
+  
+  .tab-content p {
+    color: #cccccc;
+  }
+  
+  .welcome-container h1 {
+    color: #ffffff;
+  }
+  
+  .welcome-container > p {
+    color: #cccccc;
+  }
+  
+  .instruction p {
+    color: var(--ion-color-primary);
+  }
+  
+  .arrow-icon {
+    color: var(--ion-color-primary);
+  }
+  
+  // Invertir colores de los iconos al cambiar a modo oscuro
+  .tab-icon,
+  .colormode-icon,
+  .settings-icon {
+    filter: invert(1);
+  }
+}
+
+ion-content {
+  --background: #f9f9f9;
+}
+
+ion-tab-bar {
+  --background: #e0e0e0;
+  --min-height: 90px;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: 20px;
+  padding-top: 8px;
+  border-top: 1px solid #333333;
+}
+
+ion-tab-button {
+  --color: #333333;
+  padding: 8px 4px 16px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 70px;
+  position: relative;
+}
+
+ion-tab-button::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: calc(100% + 30px);
+  width: 1px;
+  background-color: #333333;
+}
+
+ion-tab-button:last-child::after {
+  display: none;
+}
+
+ion-tab-button.selected {
+  --color: var(--ion-color-primary);
+}
+
+.qr-display {
+  margin-top: 20px;
+  text-align: center;
+  padding: 20px;
+  background: var(--ion-color-light);
+  border-radius: 12px;
+}
+
+.qr-display img {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border: 2px solid var(--ion-color-medium);
+  border-radius: 8px;
+  background: white;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.qr-actions {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// Estilos para Create QR Tab
+.create-qr-tab {
+  z-index: 1;
+}
+
+.create-qr-content {
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.input-container {
+  margin: 20px 0;
+  position: relative;
+  z-index: 10;
+  
+  ion-item {
+    --background: #ffffff;
+    --border-color: var(--ion-color-medium);
+    --border-width: 2px;
+    --border-style: solid;
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 56px;
+    margin-bottom: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .qr-text-input {
+    --padding-start: 0;
+    --padding-end: 0;
+    --color: #000000; // Texto negro en modo claro
+    --placeholder-color: #666666;
+    font-size: 16px;
+    min-height: 48px;
+  }
+}
+
+// Modo oscuro para el input
+body.dark-mode {
+  .input-container {
+    ion-item {
+      --background: #1e1e1e;
+      --border-color: #444444;
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+    }
+
+    .qr-text-input {
+      --color: #ffffff; // Texto blanco en modo oscuro
+      --placeholder-color: #aaaaaa;
+    }
+  }
+}
+
+.generate-btn {
+  margin-top: 15px;
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+}
+
+ion-item {
+  margin-bottom: 20px;
+}
+
+ion-button {
+  margin-top: 10px;
+}
+
+// Estilos para QR Reader
+.qr-reader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 20px;
+  
+  .qr-reader-icon {
+    ion-icon {
+      font-size: 120px;
+      color: var(--ion-color-primary);
+    }
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  p {
+    margin: 0 0 20px 0;
+    color: var(--ion-color-medium);
+  }
+  
+  ion-button {
+    max-width: 300px;
+    width: 100%;
+  }
+}
+
+// Estilos para History
+.history-container {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #000000; // Negro en modo claro
+    }
+  }
+  
+  .empty-history {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50%;
+    color: var(--ion-color-medium);
+    
+    .empty-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      font-size: 16px;
+      text-align: center;
+    }
+  }
+  
+  ion-list {
+    background: transparent;
+    padding: 0;
+  }
+  
+  ion-card.history-item {
+    margin: 0 0 12px 0 !important;
+    cursor: pointer;
+    transition: transform 0.2s;
+    --background: #e0e0e0 !important;
+    --color: #000000 !important;
+    background: #e0e0e0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    
+    &:hover {
+      transform: scale(1.02);
+    }
+    
+    ion-card-content {
+      padding: 15px !important;
+      --background: #e0e0e0 !important;
+      --color: #000000 !important;
+      background: #e0e0e0 !important;
+    }
+
+    .item-content {
+      .item-text p {
+        color: #000000 !important; // Texto negro en modo claro
+      }
+    }
+  }
+}
+
+// Clase específica para cards oscuros - MUY IMPORTANTE
+.history-container ion-card.dark-card {
+  --background: #2d2d2d !important;
+  --color: #ffffff !important;
+  background-color: #2d2d2d !important;
+  background: #2d2d2d !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0 0 12px 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  
+  ion-card-content {
+    --background: #2d2d2d !important;
+    --color: #ffffff !important;
+    background-color: #2d2d2d !important;
+    background: #2d2d2d !important;
+    padding: 15px !important;
+  }
+
+  .item-content {
+    .item-text p {
+      color: #ffffff !important;
+    }
+  }
+
+  .item-footer {
+    ion-text, small {
+      color: #aaaaaa !important;
+    }
+  }
+}
+
+// Modo oscuro para history items
+body.dark-mode {
+  .history-container {
+    .history-header h2 {
+      color: #ffffff;
+    }
+
+    .empty-history {
+      p {
+        color: #cccccc;
+      }
+    }
+
+    ion-card.history-item {
+      &::part(native) {
+        background: #2d2d2d !important;
+      }
+      
+      ion-card-content {
+        --background: #2d2d2d;
+        background: #2d2d2d !important;
+      }
+
+      .item-content {
+        .item-text p {
+          color: #ffffff !important; // Texto blanco en modo oscuro
+        }
+      }
+
+      .item-footer {
+        ion-text, small {
+          color: #aaaaaa !important;
+        }
+      }
+    }
+  }
+}
+
+.history-container {
+  .history-item {
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      
+      ion-badge {
+        font-size: 11px;
+        padding: 4px 8px;
+      }
+    }
+    
+    .item-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+      
+      .content-icon {
+        font-size: 20px;
+        color: var(--ion-color-primary);
+        flex-shrink: 0;
+      }
+      
+      .item-text {
+        flex: 1;
+        
+        p {
+          margin: 0;
+          font-size: 14px;
+          word-break: break-all;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+      }
+    }
+    
+    .item-footer {
+      display: flex;
+      justify-content: flex-end;
+      
+      small {
+        font-size: 12px;
+      }
+    }
+  }
+}

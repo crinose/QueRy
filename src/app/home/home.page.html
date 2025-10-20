@@ -1,0 +1,170 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      QueRy
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleColorMode()" fill="clear">
+        <img src="assets/icon/colormode.png" alt="Color Mode" class="colormode-icon">
+      </ion-button>
+      <ion-button (click)="navigateToSettings()" fill="clear">
+        <img src="assets/icon/settings.png" alt="Settings" class="settings-icon">
+      </ion-button>
+      <ion-button (click)="logout()" fill="clear" color="danger">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">QueRy</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Contenidos cambian según la pestaña seleccionada -->
+  <div class="tab-content-container">
+    
+    <!-- contenidos de Home/Bienvenida -->
+    <div class="tab-content slide-content" 
+         [class.active]="selectedTab === 'home'" 
+         [class]="slideDirection">
+      <div class="welcome-content">
+        <div class="welcome-container">
+          <h1>{{ translate('welcome') }}</h1>
+          <p>{{ translate('chooseOption') }}</p>
+          
+          <div class="instruction">
+            <ion-icon name="arrow-down-outline" class="arrow-icon"></ion-icon>
+            <p><strong>{{ translate('tapToStart') }}</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contenidos de History -->
+    <div class="tab-content slide-content" 
+         [class.active]="selectedTab === 'history'" 
+         [class]="slideDirection">
+      <div class="history-container">
+        <div class="history-header">
+          <h2>{{ translate('history') }}</h2>
+          <ion-button fill="clear" size="small" color="danger" (click)="clearHistory()" *ngIf="qrHistory.length > 0">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            {{ translate('clearHistory') }}
+          </ion-button>
+        </div>
+
+        <!-- Sin historial -->
+        <div class="empty-history" *ngIf="qrHistory.length === 0">
+          <ion-icon name="time-outline" class="empty-icon"></ion-icon>
+          <p>{{ translate('emptyHistory') }}</p>
+        </div>
+
+        <!-- Lista de historial -->
+        <ion-list *ngIf="qrHistory.length > 0">
+          <ion-card *ngFor="let item of qrHistory" [ngClass]="{'history-item': true, 'dark-card': isDarkMode}" (click)="viewHistoryItem(item)">
+            <ion-card-content>
+              <div class="item-header">
+                <ion-badge [color]="item.type === 'scanned' ? 'primary' : 'success'">
+                  {{ getTypeLabel(item.type) }}
+                </ion-badge>
+                <ion-button fill="clear" size="small" color="danger" (click)="deleteHistoryItem(item.id); $event.stopPropagation()">
+                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+              </div>
+              
+              <div class="item-content">
+                <ion-icon name="link-outline" *ngIf="item.isUrl" class="content-icon"></ion-icon>
+                <ion-icon name="qr-code-outline" *ngIf="!item.isUrl" class="content-icon"></ion-icon>
+                <ion-text class="item-text">
+                  <p>{{ item.content }}</p>
+                </ion-text>
+              </div>
+              
+              <div class="item-footer">
+                <ion-text color="medium">
+                  <small>{{ formatTimestamp(item.timestamp) }}</small>
+                </ion-text>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-list>
+      </div>
+    </div>
+    
+    <!-- Contenidos de qr-reader -->
+    <div class="tab-content slide-content" 
+         [class.active]="selectedTab === 'read'" 
+         [class]="slideDirection">
+      <div class="qr-reader-content">
+        <div class="qr-reader-icon">
+          <ion-icon name="qr-code-outline"></ion-icon>
+        </div>
+        <h2>{{ translate('readQR') }}</h2>
+        <p>{{ translate('readQRDesc') }}</p>
+        
+        <ion-button expand="block" size="large" (click)="scanQR()">
+          <ion-icon slot="start" name="qr-code-outline"></ion-icon>
+          {{ translate('scanQR') }}
+        </ion-button>
+      </div>
+    </div>
+    
+    <!-- Contenidos de qr-creator -->
+    <div class="tab-content slide-content create-qr-tab" 
+         [class.active]="selectedTab === 'create'" 
+         [class]="slideDirection">
+      <div class="create-qr-content">
+        <h2>{{ translate('createQR') }}</h2>
+        
+        <div class="input-container" (click)="testClick()">
+          <ion-item lines="none">
+            <ion-input 
+              type="text"
+              [(ngModel)]="textToConvert" 
+              [placeholder]="translate('enterText')"
+              [clearInput]="true"
+              class="qr-text-input"
+              (ionFocus)="onInputFocus()">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" (click)="generateQR()" [disabled]="!textToConvert" class="generate-btn">
+          {{ translate('generateQR') }}
+        </ion-button>
+        
+        <div *ngIf="qrCodeDataURL" class="qr-display">
+          <img [src]="qrCodeDataURL" alt="Generated QR Code">
+          <div class="qr-actions">
+            <ion-button expand="block" fill="outline" (click)="clearQR()">
+              {{ translate('createAnother') }}
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</ion-content>
+
+<!-- tab inferior -->
+<ion-tab-bar slot="bottom">
+  <ion-tab-button (click)="selectTab('history')" [class.selected]="selectedTab === 'history'">
+    <img src="assets/icon/history.png" class="tab-icon" alt="History">
+    <ion-label>{{ translate('history') }}</ion-label>
+  </ion-tab-button>
+  
+  <ion-tab-button (click)="selectTab('read')" [class.selected]="selectedTab === 'read'">
+    <img src="assets/icon/read.png" class="tab-icon" alt="Read QR">
+    <ion-label>{{ translate('readQR') }}</ion-label>
+  </ion-tab-button>
+  
+  <ion-tab-button (click)="selectTab('create')" [class.selected]="selectedTab === 'create'">
+    <img src="assets/icon/create.png" class="tab-icon" alt="Create QR">
+    <ion-label>{{ translate('createQR') }}</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="translation.translate('back')" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ translation.translate('qrResult') }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" [class.dark-mode]="isDarkMode">
+  <div class="result-container" [class.dark-mode]="isDarkMode">
+    <!-- Mostrar el código QR generado -->
+    <div class="qr-display" *ngIf="qrCodeImage">
+      <img [src]="qrCodeImage" alt="Código QR" />
+    </div>
+
+    <!-- Card con el contenido del QR -->
+    <ion-card [class.dark-mode]="isDarkMode">
+      <ion-card-header>
+        <ion-card-title>{{ translation.translate('scannedContent') }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Mostrar el contenido del QR -->
+        <div class="qr-content" [class.dark-mode]="isDarkMode">
+          <ion-text>
+            <p class="qr-data">{{ qrData }}</p>
+          </ion-text>
+        </div>
+
+        <!-- Indicador de tipo -->
+        <div class="content-type" *ngIf="isUrl">
+          <ion-icon name="link-outline"></ion-icon>
+          <ion-text color="primary">
+            <small>{{ translation.translate('detectedUrl') }}</small>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botones de acción -->
+    <div class="action-buttons">
+      <!-- Botón para copiar -->
+      <ion-button expand="block" (click)="copyToClipboard()">
+        <ion-icon slot="start" name="copy-outline"></ion-icon>
+        {{ translation.translate('copyToClipboard') }}
+      </ion-button>
+
+      <!-- Botón para abrir URL (solo si es URL) -->
+      <ion-button expand="block" fill="outline" (click)="openUrl()" *ngIf="isUrl">
+        <ion-icon slot="start" name="link-outline"></ion-icon>
+        {{ translation.translate('openUrl') }}
+      </ion-button>
+
+      <!-- Botón para volver -->
+      <ion-button expand="block" fill="clear" (click)="goBack()">
+        {{ translation.translate('scanAnother') }}
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

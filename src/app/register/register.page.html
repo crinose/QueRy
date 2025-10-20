@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ translation.translate('register') }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="register-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ translation.translate('registerButton') }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">{{ translation.translate('username') }}</ion-label>
+          <ion-input 
+            type="text" 
+            [(ngModel)]="username"
+            [disabled]="isLoading"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">{{ translation.translate('email') }}</ion-label>
+          <ion-input 
+            type="email" 
+            [(ngModel)]="email"
+            [disabled]="isLoading"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">{{ translation.translate('password') }}</ion-label>
+          <ion-input 
+            type="password" 
+            [(ngModel)]="password"
+            [disabled]="isLoading"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Confirmar {{ translation.translate('password') }}</ion-label>
+          <ion-input 
+            type="password" 
+            [(ngModel)]="confirmPassword"
+            [disabled]="isLoading"
+          ></ion-input>
+        </ion-item>
+
+        <ion-button 
+          expand="block" 
+          (click)="register()" 
+          class="ion-margin-top"
+          [disabled]="isLoading"
+        >
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">{{ translation.translate('registerButton') }}</span>
+        </ion-button>
+
+        <div class="login-link ion-text-center ion-margin-top">
+          <ion-text color="medium">
+            {{ translation.translate('hasAccount') }}
+          </ion-text>
+          <ion-button fill="clear" (click)="goToLogin()">
+            {{ translation.translate('login') }}
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Botón flotante de cambio de idioma -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="toggleLanguage()">
+      <ion-icon name="language-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
