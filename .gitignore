@@ -68,3 +68,19 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# ========== SEGURIDAD - Archivos de firma Android ==========
+# NUNCA subir estos archivos - contienen credenciales privadas
+*.jks
+*.keystore
+key.properties
+android/key.properties
+android/*.jks
+android/app/key.properties
+android/app/*.jks
+query-release-key.jks
+
+# Archivos de contraseñas
+secrets.txt
+passwords.txt
+*.password

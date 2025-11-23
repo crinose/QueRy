@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'ApplicationExample',
+  appId: 'com.PixelPudu.QueRy',
+  appName: 'QueRy',
   webDir: 'www',
   plugins: {
     StatusBar: {
