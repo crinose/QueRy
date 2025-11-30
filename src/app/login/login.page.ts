@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonSpinner, IonFab, IonFabButton, IonIcon, AlertController } from '@ionic/angular/standalone';
-import { AuthService } from '../services/auth.service';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
+import { FirebaseDataService } from '../services/firebase-data.service';
+import { AppModeService } from '../services/app-mode.service';
 import { TranslationService } from '../services/translation.service';
 import { StorageService } from '../services/storage.service';
 import { addIcons } from 'ionicons';
@@ -17,12 +19,14 @@ import { languageOutline } from 'ionicons/icons';
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonSpinner, IonFab, IonFabButton, IonIcon, CommonModule, FormsModule]
 })
 export class LoginPage implements OnInit {
-  username: string = '';
+  username: string = ''; // Ahora acepta email
   password: string = '';
   isLoading: boolean = false;
 
   constructor(
-    private authService: AuthService,
+    private firebaseAuth: FirebaseAuthService,
+    private firebaseData: FirebaseDataService,
+    private appMode: AppModeService,
     private router: Router,
     public translation: TranslationService,
     private alertController: AlertController,
@@ -44,13 +48,8 @@ export class LoginPage implements OnInit {
       this.router.navigate(['/onboarding']);
       return;
     }
-
-    // Verificar si ya está autenticado
-    const isAuthenticated = await this.authService.isAuthenticated();
-    if (isAuthenticated) {
-      console.log('✅ Ya está autenticado, redirigiendo a home');
-      this.router.navigate(['/home']);
-    }
+    
+    // NO verificar autenticación aquí - dejar que el usuario haga login
   }
 
   async login() {
@@ -63,19 +62,128 @@ export class LoginPage implements OnInit {
     }
 
     this.isLoading = true;
-    const result = await this.authService.login(this.username, this.password);
-    this.isLoading = false;
-
-    if (result.success) {
+    
+    try {
+      // Login con Firebase usando email
+      await this.firebaseAuth.login(this.username, this.password);
+      
+      // Verificar si el email está verificado
+      const currentUser = this.firebaseAuth.getCurrentUser();
+      if (currentUser && !currentUser.emailVerified) {
+        // Email no verificado - cerrar sesión y mostrar mensaje
+        await this.firebaseAuth.logout();
+        
+        // Preguntar si quiere reenviar el email
+        const alert = await this.alertController.create({
+          header: this.translation.translate('emailNotVerified'),
+          message: this.translation.translate('emailNotVerifiedMessage'),
+          buttons: [
+            {
+              text: this.translation.translate('cancel'),
+              role: 'cancel'
+            },
+            {
+              text: this.translation.translate('resendVerificationEmail'),
+              handler: async () => {
+                try {
+                  // Hacer login temporal para poder reenviar
+                  await this.firebaseAuth.login(this.username, this.password);
+                  await this.firebaseAuth.resendVerificationEmail();
+                  await this.firebaseAuth.logout();
+                  
+                  await this.showAlert(
+                    this.translation.translate('success'),
+                    this.translation.translate('verificationEmailResent')
+                  );
+                } catch (error: any) {
+                  await this.showAlert(
+                    this.translation.translate('error'),
+                    error.message
+                  );
+                }
+              }
+            }
+          ]
+        });
+        
+        await alert.present();
+        this.isLoading = false;
+        return;
+      }
+      
+      // Esperar un momento para que Firebase actualice el estado de autenticación
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Inicializar perfil y configuración del usuario en el primer login
+      try {
+        const profile = await this.firebaseData.getUserProfile();
+        if (!profile) {
+          // Primera vez que inicia sesión, crear perfil y configuración
+          await this.firebaseData.saveUserProfile(this.username, this.username);
+          await this.firebaseData.saveUserConfig({
+            vibrationEnabled: true,
+            soundEnabled: true,
+            saveHistoryEnabled: true
+          });
+        }
+      } catch (profileError) {
+        console.log('Error al verificar/crear perfil:', profileError);
+        // Intentar crear el perfil de todas formas
+        try {
+          await this.firebaseData.saveUserProfile(this.username, this.username);
+          await this.firebaseData.saveUserConfig({
+            vibrationEnabled: true,
+            soundEnabled: true,
+            saveHistoryEnabled: true
+          });
+        } catch (e) {
+          console.log('No se pudo crear el perfil, continuando:', e);
+        }
+      }
+      
       // Limpiar la contraseña por seguridad
       this.password = '';
+      
+      // GUARDAR SESIÓN ACTIVA
+      const userId = this.firebaseAuth.getCurrentUserId();
+      if (userId) {
+        await this.storage.setConfigValue('session_active', 'true');
+        await this.storage.setConfigValue('firebase_uid', userId);
+        await this.storage.setConfigValue('user_email', this.username);
+        console.log('💾 SESIÓN GUARDADA');
+        console.log('   UID:', userId);
+        console.log('   Email:', this.username);
+      }
+      
+      // Establecer modo autenticado (esto se guarda en Preferences)
+      console.log('💾 Guardando modo authenticated...');
+      await this.appMode.setMode('authenticated');
+      
+      // VERIFICAR que realmente se guardó
+      const verificarModo = this.appMode.getMode();
+      console.log('✅ Verificación - Modo actual:', verificarModo);
+      
+      // Esperar para asegurar persistencia
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('🚀 Navegando a home...');
       this.router.navigate(['/home']);
-    } else {
+    } catch (error: any) {
       await this.showAlert(
         this.translation.translate('error'),
-        result.message
+        error.message
       );
+    } finally {
+      this.isLoading = false;
     }
+  }
+
+  async continueAsGuest() {
+    // Establecer modo invitado
+    await this.appMode.setMode('guest');
+    
+    // Ir directamente al home sin autenticación
+    this.router.navigate(['/home']);
   }
 
   goToRegister() {
@@ -85,13 +193,8 @@ export class LoginPage implements OnInit {
   async resetPassword() {
     const alert = await this.alertController.create({
       header: this.translation.translate('resetPassword'),
-      message: this.translation.translate('resetPasswordMessage'),
+      message: 'Ingresa tu correo electrónico para recibir un enlace de recuperación',
       inputs: [
-        {
-          name: 'username',
-          type: 'text',
-          placeholder: this.translation.translate('username')
-        },
         {
           name: 'email',
           type: 'email',
@@ -104,127 +207,30 @@ export class LoginPage implements OnInit {
           role: 'cancel'
         },
         {
-          text: this.translation.translate('reset'),
+          text: 'Enviar',
           handler: async (data) => {
-            if (!data.username || !data.email) {
+            if (!data.email) {
               await this.showAlert(
                 this.translation.translate('error'),
-                this.translation.translate('fieldRequired')
+                'Por favor ingresa tu correo electrónico'
               );
               return false;
             }
 
-            // Verificar que el usuario y email coincidan
-            const user = await this.storage.getUserByUsername(data.username);
-            
-            if (!user) {
+            try {
+              await this.firebaseAuth.resetPassword(data.email);
+              await this.showAlert(
+                this.translation.translate('success'),
+                'Se ha enviado un correo de recuperación. Revisa tu bandeja de entrada.'
+              );
+              return true;
+            } catch (error: any) {
               await this.showAlert(
                 this.translation.translate('error'),
-                this.translation.translate('userNotFound')
+                error.message
               );
               return false;
             }
-
-            if (user.email !== data.email) {
-              await this.showAlert(
-                this.translation.translate('error'),
-                this.translation.translate('emailMismatch')
-              );
-              return false;
-            }
-
-            // Mostrar mensaje de confirmación de envío de correo
-            await this.showEmailSentConfirmation(user.id!);
-            return true;
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async showEmailSentConfirmation(userId: number) {
-    // Mensaje de confirmación con opción de cambiar contraseña directamente (simulación)
-    const alert = await this.alertController.create({
-      header: this.translation.translate('emailSent'),
-      message: this.translation.translate('emailSentMessage'),
-      buttons: [
-        {
-          text: this.translation.translate('ok'),
-          role: 'cancel'
-        },
-        {
-          text: this.translation.translate('changeNow'),
-          handler: async () => {
-            // Permitir cambiar la contraseña directamente (solo para demo)
-            await this.showNewPasswordDialog(userId);
-            return true;
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async showNewPasswordDialog(userId: number) {
-    const alert = await this.alertController.create({
-      header: this.translation.translate('newPassword'),
-      message: this.translation.translate('newPasswordMessage'),
-      inputs: [
-        {
-          name: 'password',
-          type: 'password',
-          placeholder: this.translation.translate('newPassword')
-        },
-        {
-          name: 'confirmPassword',
-          type: 'password',
-          placeholder: this.translation.translate('confirmPassword')
-        }
-      ],
-      buttons: [
-        {
-          text: this.translation.translate('cancel'),
-          role: 'cancel'
-        },
-        {
-          text: this.translation.translate('save'),
-          handler: async (data) => {
-            if (!data.password || !data.confirmPassword) {
-              await this.showAlert(
-                this.translation.translate('error'),
-                this.translation.translate('fieldRequired')
-              );
-              return false;
-            }
-
-            if (data.password.length < 6) {
-              await this.showAlert(
-                this.translation.translate('error'),
-                this.translation.translate('passwordTooShort')
-              );
-              return false;
-            }
-
-            if (data.password !== data.confirmPassword) {
-              await this.showAlert(
-                this.translation.translate('error'),
-                this.translation.translate('passwordMismatch')
-              );
-              return false;
-            }
-
-            // Actualizar la contraseña
-            await this.storage.updateUser(userId, { password: data.password });
-            
-            await this.showAlert(
-              this.translation.translate('success'),
-              this.translation.translate('passwordResetSuccess')
-            );
-            
-            return true;
           }
         }
       ]

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Capacitor } from '@capacitor/core';
+import { StorageAdapter } from './storage-adapter.service';
 
 export interface User {
   id?: number;
@@ -19,7 +19,7 @@ export class StorageService {
   private isInitialized: boolean = false;
   private initializationPromise: Promise<void> | null = null;
 
-  constructor() {}
+  constructor(private storage: StorageAdapter) {}
 
   async initializeDatabase(): Promise<void> {
     // Si ya hay una inicialización en progreso, esperar a que termine
@@ -40,8 +40,10 @@ export class StorageService {
   }
 
   private async performInitialization(): Promise<void> {
-    const platform = Capacitor.getPlatform();
-    console.log('🔧 Inicializando Storage en plataforma:', platform);
+    console.log('🔧 Inicializando Storage con Capacitor Preferences');
+
+    // Migrar datos antiguos de localStorage si existen
+    await this.storage.migrateFromLocalStorage();
 
     // Verificar estado actual antes de inicializar
     const currentConfig = await this.getConfig();
@@ -77,14 +79,14 @@ export class StorageService {
     const config = await this.getConfig();
     console.log('🔍 Config actual al inicializar:', config);
     
-    // Solo insertar valores que NO existen (verificar undefined específicamente)
-    if (config.language === undefined) {
+    // Solo insertar valores que NO existen (usar 'in' para verificar existencia real)
+    if (!('language' in config)) {
       await this.setConfigValue('language', 'es');
     }
-    if (config.has_seen_onboarding === undefined) {
+    if (!('has_seen_onboarding' in config)) {
       await this.setConfigValue('has_seen_onboarding', 'false');
     }
-    if (config.theme === undefined) {
+    if (!('theme' in config)) {
       await this.setConfigValue('theme', 'light');
     }
     
@@ -132,8 +134,8 @@ export class StorageService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    const data = localStorage.getItem(this.USERS_KEY);
-    return data ? JSON.parse(data) : [];
+    const users = await this.storage.getObject<User[]>(this.USERS_KEY);
+    return users || [];
   }
 
   async getUserById(id: number): Promise<User | null> {
@@ -171,7 +173,7 @@ export class StorageService {
   }
 
   private async saveUsers(users: User[]): Promise<void> {
-    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    await this.storage.setObject(this.USERS_KEY, users);
   }
 
   // ==================== AUTENTICACIÓN ====================
@@ -193,20 +195,20 @@ export class StorageService {
   }
 
   async logout(): Promise<void> {
-    localStorage.removeItem(this.SESSION_KEY);
+    await this.storage.remove(this.SESSION_KEY);
     console.log('✅ Logout exitoso');
   }
 
   async setCurrentUser(userId: number): Promise<void> {
-    localStorage.setItem(this.SESSION_KEY, JSON.stringify({ userId }));
+    await this.storage.setObject(this.SESSION_KEY, { userId });
     console.log('✅ Sesión guardada para usuario ID:', userId);
   }
 
   async getCurrentUser(): Promise<User | null> {
-    const data = localStorage.getItem(this.SESSION_KEY);
-    if (!data) return null;
+    const session = await this.storage.getObject<{ userId: number }>(this.SESSION_KEY);
+    if (!session) return null;
 
-    const { userId } = JSON.parse(data);
+    const { userId } = session;
     return await this.getUserById(userId);
   }
 
@@ -218,19 +220,19 @@ export class StorageService {
   // ==================== CONFIGURACIÓN ====================
 
   async getConfig(): Promise<any> {
-    const data = localStorage.getItem(this.CONFIG_KEY);
-    return data ? JSON.parse(data) : {};
+    const config = await this.storage.getObject(this.CONFIG_KEY);
+    return config || {};
   }
 
   async getConfigValue(key: string): Promise<string | null> {
     const config = await this.getConfig();
-    return config[key] || null;
+    return config[key] ?? null;
   }
 
   async setConfigValue(key: string, value: string): Promise<void> {
     const config = await this.getConfig();
     config[key] = value;
-    localStorage.setItem(this.CONFIG_KEY, JSON.stringify(config));
+    await this.storage.setObject(this.CONFIG_KEY, config);
     console.log(`✅ Config actualizada: ${key} = ${value}`);
   }
 
@@ -269,15 +271,15 @@ export class StorageService {
     const saved = await this.hasSeenOnboarding();
     console.log('🔍 Verificación: hasSeenOnboarding =', saved);
     
-    // Verificar localStorage directamente
-    const rawConfig = localStorage.getItem(this.CONFIG_KEY);
-    console.log('🔍 Config RAW en localStorage:', rawConfig);
+    // Verificar storage directamente
+    const rawConfig = await this.storage.get(this.CONFIG_KEY);
+    console.log('🔍 Config RAW en storage:', rawConfig);
   }
 
   // ==================== UTILIDADES ====================
 
   async clearAllData(): Promise<void> {
-    localStorage.clear();
+    await this.storage.clear();
     console.log('⚠️ Todos los datos eliminados');
   }
 

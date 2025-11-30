@@ -50,8 +50,8 @@
          [class]="slideDirection">
       <div class="history-container">
         <div class="history-header">
-          <h2>{{ translate('history') }}</h2>
-          <ion-button fill="clear" size="small" color="danger" (click)="clearHistory()" *ngIf="qrHistory.length > 0">
+          <h2>{{ showingFavorites ? translate('favorites') : translate('history') }}</h2>
+          <ion-button fill="clear" size="small" color="danger" (click)="clearHistory()" *ngIf="qrHistory.length > 0 && !showingFavorites">
             <ion-icon slot="start" name="trash-outline"></ion-icon>
             {{ translate('clearHistory') }}
           </ion-button>
@@ -59,8 +59,8 @@
 
         <!-- Sin historial -->
         <div class="empty-history" *ngIf="qrHistory.length === 0">
-          <ion-icon name="time-outline" class="empty-icon"></ion-icon>
-          <p>{{ translate('emptyHistory') }}</p>
+          <ion-icon [name]="showingFavorites ? 'star-outline' : 'time-outline'" class="empty-icon"></ion-icon>
+          <p>{{ showingFavorites ? translate('noFavorites') : translate('emptyHistory') }}</p>
         </div>
 
         <!-- Lista de historial -->
@@ -71,16 +71,19 @@
                 <ion-badge [color]="item.type === 'scanned' ? 'primary' : 'success'">
                   {{ getTypeLabel(item.type) }}
                 </ion-badge>
-                <ion-button fill="clear" size="small" color="danger" (click)="deleteHistoryItem(item.id); $event.stopPropagation()">
-                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-                </ion-button>
+                <div class="item-actions">
+                  <ion-button fill="clear" size="small" color="danger" (click)="deleteHistoryItem(item.id); $event.stopPropagation()">
+                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                  </ion-button>
+                </div>
               </div>
               
               <div class="item-content">
                 <ion-icon name="link-outline" *ngIf="item.isUrl" class="content-icon"></ion-icon>
                 <ion-icon name="qr-code-outline" *ngIf="!item.isUrl" class="content-icon"></ion-icon>
                 <ion-text class="item-text">
-                  <p>{{ item.content }}</p>
+                  <p><strong *ngIf="item.customName">{{ item.customName }}</strong></p>
+                  <p [class.custom-name-content]="item.customName">{{ item.content }}</p>
                 </ion-text>
               </div>
               
@@ -92,6 +95,13 @@
             </ion-card-content>
           </ion-card>
         </ion-list>
+
+        <!-- Botón flotante para ver favoritos -->
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="selectedTab === 'history'">
+          <ion-fab-button (click)="toggleFavoritesView()" [color]="showingFavorites ? 'warning' : 'primary'">
+            <ion-icon [name]="showingFavorites ? 'time-outline' : 'star'"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
       </div>
     </div>
     
@@ -100,6 +110,13 @@
          [class.active]="selectedTab === 'read'" 
          [class]="slideDirection">
       <div class="qr-reader-content">
+        
+        <!-- Banner de donación -->
+        <div class="support-banner" (click)="openSupportMenu($event)">
+          <ion-icon name="heart-outline"></ion-icon>
+          <span>{{ translate('supportUs') }}</span>
+        </div>
+        
         <div class="qr-reader-icon">
           <ion-icon name="qr-code-outline"></ion-icon>
         </div>
@@ -109,6 +126,11 @@
         <ion-button expand="block" size="large" (click)="scanQR()">
           <ion-icon slot="start" name="qr-code-outline"></ion-icon>
           {{ translate('scanQR') }}
+        </ion-button>
+        
+        <ion-button expand="block" size="large" fill="outline" (click)="scanFromImage()" class="scan-from-image-btn">
+          <ion-icon slot="start" name="images-outline"></ion-icon>
+          {{ translate('scanFromImage') }}
         </ion-button>
       </div>
     </div>

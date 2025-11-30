@@ -25,6 +25,16 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+/* Tipografía Nunito - Aplicación global */
+* {
+  font-family: 'Nunito', sans-serif;
+}
+
+ion-title, ion-label, ion-button, ion-card-title, ion-card-content,
+ion-item, ion-input, ion-textarea, h1, h2, h3, h4, h5, h6, p, span, div {
+  font-family: 'Nunito', sans-serif;
+}
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -72,5 +82,107 @@ body.dark-mode {
     background: #2d2d2d !important;
     box-shadow: none !important;
     border: none !important;
+  }
+}
+
+/* Sistema de degradados para bordes de botones */
+ion-button {
+  position: relative;
+  overflow: visible;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 14px;
+    padding: 3px;
+    background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  &:not([fill="clear"]):not([fill="outline"]) {
+    &::before {
+      opacity: 1;
+    }
+  }
+  
+  &[color="primary"],
+  &[color="success"],
+  &[color="warning"],
+  &[color="danger"] {
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+/* Degradado más brillante en modo oscuro */
+body.dark-mode {
+  ion-button::before {
+    background: linear-gradient(135deg, #34D399 0%, #6EE7B7 50%, #A7F3D0 100%);
+  }
+}
+
+/* Badges con degradado en bordes */
+ion-badge {
+  position: relative;
+  overflow: visible;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    padding: 2px;
+    background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+/* Tab buttons activos con degradado */
+ion-tab-button.selected {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: linear-gradient(90deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
+    border-radius: 0 0 3px 3px;
+  }
+}
+
+/* Botones de peligro solo en header (cerrar sesión) - sin borde */
+ion-header ion-button[color="danger"] {
+  &::before {
+    opacity: 0 !important;
+  }
+}
+
+/* Botones de peligro en contenido (limpiar historial) con borde rojo */
+ion-content ion-button[color="danger"] {
+  &::before {
+    background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #F87171 100%) !important;
+    opacity: 1 !important;
+  }
+}
+
+body.dark-mode {
+  ion-content ion-button[color="danger"]::before {
+    background: linear-gradient(135deg, #EF4444 0%, #F87171 50%, #FCA5A5 100%) !important;
   }
 }

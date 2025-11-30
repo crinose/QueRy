@@ -35,6 +35,30 @@ ion-app {
   overflow: hidden;
   pointer-events: auto !important;
   z-index: 1;
+  
+  /* Fondo QR sutil */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0icXIiIHg9IjAiIHk9IjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIwIiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjE2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjgiIHk9IjI0IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIwIiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMzIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjMyIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJibGFjayIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNxcikiLz48L3N2Zz4=');
+    background-size: 200px 200px;
+    background-repeat: repeat;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+/* Fondo QR en modo oscuro */
+body.dark-mode {
+  .tab-content-container::before {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0icXIiIHg9IjAiIHk9IjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMTYiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMzIiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyNCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMzIiIHk9IjE2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjgiIHk9IjI0IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iMzIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMzIiIHk9IjMyIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJ3aGl0ZSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNxcikiLz48L3N2Zz4=');
+    opacity: 0.05;
+  }
 }
 
 .tab-content {
@@ -259,6 +283,10 @@ ion-header {
     --color: var(--ion-color-primary);
   }
   
+  ion-tab-button.selected {
+    --color: #6EE7B7;
+  }
+  
   .tab-content h2 {
     color: #ffffff;
   }
@@ -330,7 +358,7 @@ ion-tab-button:last-child::after {
 }
 
 ion-tab-button.selected {
-  --color: var(--ion-color-primary);
+  --color: #047857;
 }
 
 .qr-display {
@@ -436,18 +464,76 @@ ion-button {
   align-items: center;
   justify-content: center;
   height: 100%;
-  gap: 20px;
+  gap: 0;
   
-  .qr-reader-icon {
+  .support-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(52, 211, 153, 0.15) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 20px;
+    color: #047857;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+    
     ion-icon {
-      font-size: 120px;
-      color: var(--ion-color-primary);
+      font-size: 16px;
+      color: #10B981;
+    }
+    
+    &:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(52, 211, 153, 0.2) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+    }
+    
+    &:active {
+      transform: translateY(0);
     }
   }
   
+  .qr-reader-icon {
+    margin-bottom: 20px;
+    
+    ion-icon {
+      font-size: 120px;
+      color: #000000;
+    }
+  }
+}
+
+// Modo oscuro para banner y icono QR
+:host-context(body.dark-mode) {
+  .qr-reader-content .support-banner {
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(110, 231, 183, 0.2) 100%);
+    border-color: rgba(52, 211, 153, 0.4);
+    color: #6EE7B7;
+    
+    ion-icon {
+      color: #34D399;
+    }
+    
+    &:hover {
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.2) 0%, rgba(110, 231, 183, 0.25) 100%);
+      box-shadow: 0 4px 8px rgba(52, 211, 153, 0.3);
+    }
+  }
+  
+  .qr-reader-content .qr-reader-icon ion-icon {
+    color: #ffffff !important;
+  }
+}
+
+.qr-reader-content {
   h2 {
     margin: 0;
     font-size: 24px;
+    color: #000000;
   }
   
   p {
@@ -458,6 +544,114 @@ ion-button {
   ion-button {
     max-width: 300px;
     width: 100%;
+    
+    /* Botón principal de escanear QR con animación */
+    &:first-of-type {
+      position: relative;
+      overflow: hidden;
+      
+      /* Animación de QR formándose */
+      &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background-image: 
+          repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(16, 185, 129, 0.3) 8px, rgba(16, 185, 129, 0.3) 12px),
+          repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(16, 185, 129, 0.3) 8px, rgba(16, 185, 129, 0.3) 12px);
+        animation: qr-forming 3s linear infinite;
+        pointer-events: none;
+        opacity: 0.6;
+      }
+      
+      /* Degradado verde en bordes más pronunciado */
+      &::before {
+        inset: -4px !important;
+        padding: 4px !important;
+        background: linear-gradient(135deg, #10B981 0%, #34D399 25%, #6EE7B7 50%, #34D399 75%, #10B981 100%) !important;
+        background-size: 200% 200% !important;
+        animation: gradient-shift 3s ease infinite !important;
+        opacity: 1 !important;
+      }
+    }
+  }
+}
+
+/* Animación de QR formándose */
+@keyframes qr-forming {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(25%, 25%) rotate(0deg);
+    opacity: 0.4;
+  }
+}
+
+/* Animación de gradiente moviéndose */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Botón de escanear desde imagen con verde oscuro */
+.qr-reader-content .scan-from-image-btn {
+  --background: #047857;
+  --background-hover: #065f46;
+  --background-activated: #064e3b;
+  --color: #ffffff;
+  --border-color: #047857;
+  --border-radius: 4px;
+  fill: solid;
+  
+  &::before {
+    background: linear-gradient(135deg, #047857 0%, #059669 50%, #10B981 100%) !important;
+    opacity: 1 !important;
+    border-radius: 6px;
+    inset: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Animación más visible en modo oscuro */
+body.dark-mode {
+  .qr-reader-content ion-button:first-of-type {
+    &::after {
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(52, 211, 153, 0.4) 8px, rgba(52, 211, 153, 0.4) 12px),
+        repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(52, 211, 153, 0.4) 8px, rgba(52, 211, 153, 0.4) 12px);
+    }
+    
+    &::before {
+      background: linear-gradient(135deg, #34D399 0%, #6EE7B7 25%, #A7F3D0 50%, #6EE7B7 75%, #34D399 100%) !important;
+    }
+  }
+  
+  .qr-reader-content .scan-from-image-btn {
+    --background: #059669;
+    --background-hover: #047857;
+    --background-activated: #065f46;
+  }
+  
+  .qr-reader-content .qr-reader-icon ion-icon {
+    color: #ffffff !important;
+  }
+  
+  .qr-reader-content h2 {
+    color: #ffffff;
   }
 }
 
@@ -515,6 +709,23 @@ ion-button {
     border: none !important;
     border-radius: 8px !important;
     overflow: hidden !important;
+    position: relative;
+    
+    /* Textura QR oscura de fondo */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0icXIiIHg9IjAiIHk9IjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIwIiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjE2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjgiIHk9IjI0IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIwIiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMzIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjMyIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJibGFjayIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNxcikiLz48L3N2Zz4=');
+      background-size: 80px 80px;
+      background-repeat: repeat;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
     
     &:hover {
       transform: scale(1.02);
@@ -525,6 +736,31 @@ ion-button {
       --background: #e0e0e0 !important;
       --color: #000000 !important;
       background: #e0e0e0 !important;
+      position: relative;
+      z-index: 1;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      
+      .item-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        
+        .favorite-icon {
+          font-size: 24px;
+          cursor: pointer;
+          transition: transform 0.2s;
+          
+          &:hover {
+            transform: scale(1.2);
+          }
+        }
+      }
     }
 
     .item-content {
@@ -546,6 +782,23 @@ ion-button {
   margin: 0 0 12px 0 !important;
   border-radius: 8px !important;
   overflow: hidden !important;
+  position: relative;
+  
+  /* Textura QR oscura para modo oscuro */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0icXIiIHg9IjAiIHk9IjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMTYiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMzIiIHk9IjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyNCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMzIiIHk9IjE2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjgiIHk9IjI0IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iMzIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMzIiIHk9IjMyIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJ3aGl0ZSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNxcikiLz48L3N2Zz4=');
+    background-size: 80px 80px;
+    background-repeat: repeat;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+  }
   
   ion-card-content {
     --background: #2d2d2d !important;
@@ -553,6 +806,8 @@ ion-button {
     background-color: #2d2d2d !important;
     background: #2d2d2d !important;
     padding: 15px !important;
+    position: relative;
+    z-index: 1;
   }
 
   .item-content {
@@ -644,6 +899,17 @@ body.dark-mode {
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
+        }
+        
+        strong {
+          color: var(--ion-color-primary);
+          font-size: 15px;
+        }
+        
+        .custom-name-content {
+          font-size: 12px;
+          opacity: 0.7;
+          -webkit-line-clamp: 1;
         }
       }
     }

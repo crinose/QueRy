@@ -13,9 +13,9 @@
 
       <ion-card-content>
         <ion-item>
-          <ion-label position="floating">{{ translation.translate('username') }}</ion-label>
+          <ion-label position="floating">{{ translation.translate('email') }}</ion-label>
           <ion-input 
-            type="text" 
+            type="email" 
             [(ngModel)]="username"
             [disabled]="isLoading"
           ></ion-input>
@@ -40,6 +40,16 @@
           <span *ngIf="!isLoading">{{ translation.translate('loginButton') }}</span>
         </ion-button>
 
+        <ion-button 
+          expand="block" 
+          fill="outline"
+          (click)="continueAsGuest()" 
+          class="ion-margin-top"
+          [disabled]="isLoading"
+        >
+          {{ translation.translate('continueWithoutAccount') }}
+        </ion-button>
+
         <div class="forgot-password ion-text-center ion-margin-top">
           <ion-button fill="clear" size="small" (click)="resetPassword()">
             {{ translation.translate('forgotPassword') }}
@@ -53,13 +63,6 @@
           <ion-button fill="clear" (click)="goToRegister()">
             {{ translation.translate('register') }}
           </ion-button>
-        </div>
-
-        <!-- Usuario demo info -->
-        <div class="demo-info ion-margin-top">
-          <ion-text color="medium">
-            <p><small>Demo: username: <strong>demo</strong> | password: <strong>demo123</strong></small></p>
-          </ion-text>
         </div>
       </ion-card-content>
     </ion-card>

@@ -4,6 +4,11 @@
       <ion-back-button [text]="translation.translate('back')" defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ translation.translate('qrResult') }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="editName()" *ngIf="qrId">
+        <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -39,17 +44,32 @@
 
     <!-- Botones de acción -->
     <div class="action-buttons">
+      <!-- Botón dinámico para abrir contenido (URL, email, teléfono, YouTube) -->
+      <ion-button expand="block" (click)="openContent()" *ngIf="contentType !== 'text'" color="primary">
+        <ion-icon slot="start" [name]="actionIcon"></ion-icon>
+        {{ actionLabel }}
+      </ion-button>
+
       <!-- Botón para copiar -->
-      <ion-button expand="block" (click)="copyToClipboard()">
+      <ion-button expand="block" [fill]="contentType !== 'text' ? 'outline' : 'solid'" (click)="copyToClipboard()">
         <ion-icon slot="start" name="copy-outline"></ion-icon>
         {{ translation.translate('copyToClipboard') }}
       </ion-button>
 
-      <!-- Botón para abrir URL (solo si es URL) -->
-      <ion-button expand="block" fill="outline" (click)="openUrl()" *ngIf="isUrl">
-        <ion-icon slot="start" name="link-outline"></ion-icon>
-        {{ translation.translate('openUrl') }}
-      </ion-button>
+      <!-- Botones de acción secundaria (favorito, compartir, descargar) -->
+      <div class="secondary-actions" *ngIf="qrId">
+        <ion-button fill="outline" (click)="toggleFavorite()">
+          <ion-icon slot="icon-only" [name]="isFavorite ? 'star' : 'star-outline'" [color]="isFavorite ? 'warning' : ''"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="outline" (click)="shareQR()">
+          <ion-icon slot="icon-only" name="share-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="outline" (click)="downloadQR()">
+          <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+        </ion-button>
+      </div>
 
       <!-- Botón para volver -->
       <ion-button expand="block" fill="clear" (click)="goBack()">

@@ -3,11 +3,14 @@ import { StorageService } from './storage.service';
 import { TranslationService } from './translation.service';
 
 export interface QrHistoryItem {
-  id: number;
+  id: number | string; // Puede ser number (SQLite) o string (Firebase)
+  firebaseId?: string; // ID original de Firebase
   content: string;
+  customName?: string; // Nombre personalizado opcional
   type: 'scanned' | 'created';
   timestamp: string;
   isUrl: boolean;
+  isFavorite?: boolean;
 }
 
 @Injectable({
@@ -89,6 +92,34 @@ export class QrHistoryService {
     const key = await this.getHistoryKey();
     localStorage.removeItem(key);
     console.log('✅ Historial limpiado');
+  }
+
+  async toggleFavorite(id: number): Promise<void> {
+    const history = await this.getHistory();
+    const item = history.find(item => item.id === id);
+    if (item) {
+      item.isFavorite = !item.isFavorite;
+      const key = await this.getHistoryKey();
+      localStorage.setItem(key, JSON.stringify(history));
+      console.log(`✅ Item ${item.isFavorite ? 'agregado a' : 'removido de'} favoritos`);
+    }
+  }
+
+  async getFavorites(): Promise<QrHistoryItem[]> {
+    const history = await this.getHistory();
+    return history.filter(item => item.isFavorite === true);
+  }
+
+  async updateCustomName(id: number, customName: string): Promise<void> {
+    const history = await this.getHistory();
+    const item = history.find(h => h.id === id);
+    
+    if (item) {
+      item.customName = customName.trim() || undefined;
+      const key = await this.getHistoryKey();
+      localStorage.setItem(key, JSON.stringify(history));
+      console.log('✅ Nombre personalizado actualizado:', customName);
+    }
   }
 
   private checkIfUrl(content: string): boolean {

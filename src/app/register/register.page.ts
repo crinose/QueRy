@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonSpinner, IonBackButton, IonButtons, IonFab, IonFabButton, IonIcon, AlertController } from '@ionic/angular/standalone';
-import { AuthService } from '../services/auth.service';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
+import { FirebaseDataService } from '../services/firebase-data.service';
 import { TranslationService } from '../services/translation.service';
 import { StorageService } from '../services/storage.service';
 import { addIcons } from 'ionicons';
@@ -17,14 +18,14 @@ import { languageOutline } from 'ionicons/icons';
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonSpinner, IonBackButton, IonButtons, IonFab, IonFabButton, IonIcon, CommonModule, FormsModule]
 })
 export class RegisterPage implements OnInit {
-  username: string = '';
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
   isLoading: boolean = false;
 
   constructor(
-    private authService: AuthService,
+    private firebaseAuth: FirebaseAuthService,
+    private firebaseData: FirebaseDataService,
     private router: Router,
     public translation: TranslationService,
     private alertController: AlertController,
@@ -46,18 +47,13 @@ export class RegisterPage implements OnInit {
       this.router.navigate(['/onboarding']);
       return;
     }
-
-    // Verificar si ya está autenticado
-    const isAuthenticated = await this.authService.isAuthenticated();
-    if (isAuthenticated) {
-      console.log('✅ Ya está autenticado, redirigiendo a home');
-      this.router.navigate(['/home']);
-    }
+    
+    // NO verificar autenticación aquí - dejar que el usuario se registre
   }
 
   async register() {
     // Validaciones
-    if (!this.username || !this.email || !this.password || !this.confirmPassword) {
+    if (!this.email || !this.password || !this.confirmPassword) {
       await this.showAlert(
         this.translation.translate('error'),
         this.translation.translate('fieldRequired')
@@ -90,20 +86,31 @@ export class RegisterPage implements OnInit {
     }
 
     this.isLoading = true;
-    const result = await this.authService.register(this.username, this.password, this.email);
-    this.isLoading = false;
-
-    if (result.success) {
+    
+    try {
+      // Registrar en Firebase Auth y enviar email de verificación
+      const user = await this.firebaseAuth.register(this.email, this.password);
+      
+      // Cerrar sesión inmediatamente para que tenga que hacer login manual
+      await this.firebaseAuth.logout();
+      
+      // Esperar un momento para que el estado se actualice
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       await this.showAlert(
-        this.translation.translate('success'),
-        'Usuario registrado exitosamente'
+        this.translation.translate('emailVerificationRequired'),
+        this.translation.translate('emailVerificationSent')
       );
-      this.router.navigate(['/home']);
-    } else {
+      
+      // Ir a login
+      this.router.navigate(['/login']);
+    } catch (error: any) {
       await this.showAlert(
         this.translation.translate('error'),
-        result.message
+        error.message
       );
+    } finally {
+      this.isLoading = false;
     }
   }
 

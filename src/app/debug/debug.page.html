@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>DEBUG</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-textarea [value]="debugInfo" readonly rows="20"></ion-textarea>
+  
+  <ion-button expand="block" (click)="loadDebugInfo()">
+    Refrescar
+  </ion-button>
+  
+  <ion-button expand="block" color="danger" (click)="clearAll()">
+    Borrar Todo
+  </ion-button>
+</ion-content>

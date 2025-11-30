@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { onboardingGuard } from './guards/onboarding.guard';
+import { initGuard } from './guards/init.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    canActivate: [initGuard],
+    children: [],
   },
   {
     path: 'onboarding',
@@ -29,6 +30,10 @@ export const routes: Routes = [
     path: 'configuration',
     loadComponent: () => import('./configuration/configuration.page').then((m) => m.ConfigurationPage),
     canActivate: [authGuard]
+  },
+  {
+    path: 'debug',
+    loadComponent: () => import('./debug/debug.page').then((m) => m.DebugPage),
   },
   {
     path: 'qr-result',

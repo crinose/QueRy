@@ -1,21 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon, IonList, IonItem, IonLabel, IonNote, IonFab, IonFabButton, AlertController } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon, IonList, IonItem, IonLabel, IonNote, IonFab, IonFabButton, IonBadge, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, informationOutline } from 'ionicons/icons';
 import { TranslationService } from '../services/translation.service';
+import { AppModeService } from '../services/app-mode.service';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-configuration',
   templateUrl: './configuration.page.html',
   styleUrls: ['./configuration.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon, IonList, IonItem, IonLabel, IonNote, IonFab, IonFabButton]
+  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon, IonList, IonItem, IonLabel, IonNote, IonFab, IonFabButton, IonBadge]
 })
 export class ConfigurationPage implements OnInit, OnDestroy {
   selectedLanguage: string = 'English';
   private languageSubscription?: Subscription;
+  isGuestMode: boolean = false;
+  userEmail: string = '';
   
   private languages = [
     { text: 'English', value: 'en' },
@@ -25,7 +30,9 @@ export class ConfigurationPage implements OnInit, OnDestroy {
   constructor(
     private router: Router, 
     private alertController: AlertController,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private appMode: AppModeService,
+    private firebaseAuth: FirebaseAuthService
   ) {
     addIcons({ arrowBackOutline, informationOutline });
   }
@@ -35,6 +42,15 @@ export class ConfigurationPage implements OnInit, OnDestroy {
     this.languageSubscription = this.translationService.currentLanguage$.subscribe(language => {
       this.selectedLanguage = this.translationService.getLanguageDisplay(language);
     });
+    
+    // Detectar modo actual
+    this.isGuestMode = this.appMode.isGuestMode();
+    
+    // Si está autenticado, obtener email
+    if (this.appMode.isAuthenticatedMode()) {
+      const user = this.firebaseAuth.getCurrentUser();
+      this.userEmail = user?.email || '';
+    }
   }
 
   // Limpiar subscripcion al destruir el componente
@@ -80,6 +96,12 @@ export class ConfigurationPage implements OnInit, OnDestroy {
 
   goBack() {
     this.router.navigate(['/home']);
+  }
+  
+  async signIn() {
+    // Limpiar modo invitado y navegar a login
+    await this.appMode.clearMode();
+    this.router.navigate(['/login']);
   }
 
   testErrorPage() {
